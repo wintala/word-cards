@@ -11,7 +11,7 @@ const getOneVocab = (id) => {
 }
 
 const postVocab = (vocab) => {
-	axios.post(baseUrl + "vocabs/", vocab)
+	return axios.post(baseUrl + "vocabs/", vocab).then(response => response.data)
 }
 
 const deleteVocab = (id) => {

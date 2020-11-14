@@ -11,7 +11,6 @@ const FileForm = ({setNavLocation}) => {
 
   const handleFileUpload = (file) => {
     const reader = new FileReader()
-    console.log(file.name)
 
     reader.onload = async (fileData) => { 
       const text = fileData.target.result
@@ -20,8 +19,11 @@ const FileForm = ({setNavLocation}) => {
       dispatch(setWords(words))
       const fileName = file.name.substring(0, file.name.length - 4)
       const postData = {name: fileName, wordpairs: arr.data.map(x => ({word: x[0], translation: x[1]}))}
-      service.postVocab(postData)
-      setNavLocation("cards")
+      if (postData.wordpairs.length !== 0) {
+        service.postVocab(postData).catch(err => window.alert("Your data could not be the saved to the server due to invalid content of your file"))
+        setNavLocation("cards")
+      } else {
+        window.alert("There appeard not to be any content in your file")}
     }
 
     reader.readAsText(file)
@@ -69,8 +71,8 @@ const FileForm = ({setNavLocation}) => {
               </tr>
               <tr>
                 <td>4</td>
-                <td>word4</td>
-                <td>translation4</td>
+                <td>...</td>
+                <td>...</td>
               </tr>
             </tbody>
           </table>
