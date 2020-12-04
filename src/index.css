@@ -1,27 +1,25 @@
 :root {
-	/* basic elements */
+
+	--pink: rgb(253, 176, 176);
+	--green: rgb(150, 255, 140);
+	--blue: rgb(104, 156, 252);
+
 	--main-backgroung-color:white;
 	--main-text-color: black;
 	--main-border-radius: 4px;
-	--main-gradient: linear-gradient(rgb(253, 176, 176), white);
 
-	/* nav bar */
-	--nav-position: sticky; /* only sticky and static */
-	--navbar-bg-color: rgb(253, 176, 176);
+	--nav-position: sticky;
 	--navbar-color: white;
 	--mobile-nav-anim-time: 1s;
 
-	 /* margins and paddings */
 	--margin-small: 5px;
 	--margin-medium: 10px;
 	--margin-large: 20px;
 
-		/* buttons */
 	--main-button-text-color: white;
-	--main-button-background-color: rgb(150, 255, 140);
+
 	--main-button-border-radius: 0px;
 
-		/* headers */
 	--main-header-color: white;
 	--header-text-shadow: 0px 2px rgb(253, 176, 176);
 }
@@ -33,8 +31,10 @@
 html, body, #root {
 	margin: 0;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
-	background-color: var(--main-backgroung-color);
+	height: calc(100vh - 40px);
+	text-align: center;
 }
+
 
 #root {
   display: block;
@@ -46,9 +46,124 @@ input[type="file"] {
 
 figure {
 	padding: 20px;
-	background-color: var(--navbar-bg-color);
+	background-color: var(--pink);
 	border-radius: 50%;
 	cursor: pointer;
+}
+
+.mobile-nav-wrap {
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: sticky;
+  top: 0;
+	left: 0;
+	width: 100%;
+  height: 40px;
+  z-index: 1;
+  background-color: var(--pink);
+}
+
+.mobile-nav-wrap div{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.mobile-nav-wrap .toggler {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+}
+
+.mobile-nav-icon {
+	position: fixed;
+  top: 0;
+	left: 0;
+	width: 40px;
+  height: 40px;
+	z-index: 2;
+	background-color: var(--pink);
+}
+
+.mobile-nav-icon div{
+	border-radius: 16px;
+	width: 70%;
+	margin: 3px auto;
+	height: 3px;
+	background-color: white;
+}
+.mobile-nav-menu {
+	position: fixed;
+	padding: 0;
+	margin: 0;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: var(--pink);
+	visibility: hidden;
+
+}
+
+@keyframes l{
+	0%{top: -100%;}
+	100%{top: 0;}
+}
+
+
+.mobile-nav-menu div{
+  color: white;
+  text-align: center;
+  text-decoration: none;
+	font-size: 20px;
+	margin: var(--margin-medium) 0px;
+	cursor: pointer;
+}
+
+.mobile-nav-menu div:hover,  .mobile-nav-menu a:hover{
+	margin-bottom: calc(var(--margin-medium) - 3px);
+	border-bottom: 3px solid white;
+}
+
+.mobile-nav-wrap .toggler:checked + .mobile-nav-menu{
+	visibility: visible;
+	animation: l var(--mobile-nav-anim-time) linear;
+}
+
+.mobile-nav-wrap .toggler:checked ~ .mobile-nav-icon div:first-child{
+	position: absolute;
+	transform: rotate(45deg);
+	animation: x-rotate-upper var(--mobile-nav-anim-time) linear;
+}
+
+.mobile-nav-wrap .toggler:checked ~ .mobile-nav-icon div:last-child{
+	position: absolute;
+	transform: rotate(-45deg);
+	animation: x-rotate-lower var(--mobile-nav-anim-time) linear;
+}
+
+.mobile-nav-wrap .toggler:checked ~ .mobile-nav-icon div:nth-child(2){
+	position: absolute;
+	visibility: hidden;
+}
+
+
+@keyframes x-rotate-upper{
+	0% {transform: none;}
+	100% {transform: rotate(45deg);}
+}
+
+@keyframes x-rotate-lower{
+	0% {transform: none;}
+	100% {transform: rotate(-45deg);}
 }
 
 ul {
@@ -63,7 +178,7 @@ ul {
 
 li {
 	position: relative;
-	background-color: var(--navbar-bg-color);
+	background-color: var(--pink);
 	border-radius: 2px;
 	width: 100%;
 	border-bottom: 3px solid var(--main-backgroung-color);
@@ -83,17 +198,63 @@ li:nth-child(odd){
   background-color: rgb(150, 255, 140);
 }
 
-.delete-button {
+.user-form {
+	text-align: center;
+	width: 90vw;
+	max-width: 300px;
+	margin: auto;
+}
+
+.input-container{
+	position: relative;
+	margin-bottom: 25px;
+}
+.input-container label{
 	position: absolute;
-	top: 50% - 5px;
-	right: 5px;
+	color: var(--blue);
+	top: 0px;
+	left: 0px;
+	font-size: 16px;
+	transition: all 0.5s ease-in-out;
+}
+.input-container input{ 
+  border: 0;
+  border-bottom: 1px solid var(--blue);  
+  background: transparent;
+  width: 100%;
+  padding: 8px 0 5px 0;
+	font-size: 16px;
+	margin-bottom: 2px;
+}
+.input-container input:focus{ 
+ border: none;	
+ outline: none;
+ border-bottom: 3px solid var(--pink);
+ margin-bottom: 0px;
+}
+
+.input-container input:focus ~ label,
+.input-container input:valid ~ label{
+	top:-12px;
+	font-size:12px;
+	color: var(--pink);
+}
+
+.x-button-holder {
+	padding: 0px;
+}
+
+.delete-button {
+	top: 50% - 12px;
+	right: 12px;
 	border-radius: 50px;
-	width: 10px;
-	height: 10px;
-	font-size: 12px;
-	line-height: 12px;
+	width: 24px;
+	height: 24px;
+	font-size: 16px;
+	line-height: 324px;
 	background-color: red;
 	color: white;
+	cursor: pointer;
 	font-weight: bolder;
 }
 
@@ -108,7 +269,7 @@ table {
 	margin-top: 20px;
   width: 400px;
   color: #ffffff;
-  background-color: var(--navbar-bg-color);
+  background-color: var(--pink);
   border-collapse: collapse;
 	overflow: hidden;
 }
@@ -117,7 +278,7 @@ tr {
   height: 40px;
 }
 
-td{
+td, th{
   padding: 10px;
   border-bottom: 3px solid var(--main-backgroung-color);
   text-align: center;
@@ -133,6 +294,55 @@ tr:nth-child(odd){
 .word-table {
 	margin: auto;
 	margin-top: 30px;
+	margin-bottom: 20px;
+	width: 90vw;
+	max-width: 700px;
+}
+
+#table-info, #main-info, #note{
+	text-align: center;
+	margin: 20px auto;
+	width: 90vw;
+	max-width: 700px;
+	color: var(--blue);
+}
+
+#main-info {
+	font-size: 20px;
+}
+
+#note {
+	max-width: 500px;
+	font-size: 12px;
+	margin-bottom: 20px;
+	text-align: justify;
+	color: black;
+}
+
+#tips-table {
+	margin: 20px auto;
+	width: 90vw;
+	max-width: 500px;
+	background-color: var(--blue);
+}
+
+
+#tips-table td, #tips-table th{
+	background-color: var(--green);
+	text-align: left;
+}
+
+#tips-table th{
+	font-weight: bolder;
+	background-color: var(--blue);
+}
+
+#card-wrap {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .card{
@@ -153,7 +363,8 @@ tr:nth-child(odd){
 .card .word {
   width: 100%;
   height: 100%;
-  margin-top: bottom;
+	margin-top: bottom;
+	text-align: center;
 }
 
 .next-prev-wrap {
@@ -171,20 +382,31 @@ tr:nth-child(odd){
 }
 
 .next-prev-wrap button:hover{
-  border: 3px solid var(--main-button-background-color);
+  border: 3px solid var(--green);
 }
 
 
 .header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	color: var(--main-header-color);
 	text-shadow: var(--header-text-shadow);
 	text-align: center;
 	font-size: 3em;
-	background: var(--main-gradient);
+	background-color: var(--pink);
 	width: 100%;
+	height: 200px;
+	font-size: 25px;
+	border-bottom-left-radius:40%;
+	border-bottom-right-radius:40%;
 	margin: 0;
-	flex-basis: 250px;
-	line-height: 250px;
+	margin-bottom: 30px;
+}
+
+.header h1 {
+	margin-bottom: 80px;
+	box-sizing: border-box;
 }
 
 .instruction-wrapper {
@@ -196,21 +418,23 @@ tr:nth-child(odd){
 	height: 300px;
 	width: 450px;
 	font-size: 16px;
-	border: 3px solid var(--navbar-bg-color);
+	border: 3px solid var(--pink);
 	text-align: center;
+	background-color: white;
+	max-width: 95vw;
 }
 
 .or {
 	font-size: 50px;
 	font-weight: bolder;
-	color: rgb(150, 255, 140);
+	color: var(--green);
 	margin: 20px;
 }
 
 .spin-loading {
-  border: 6px solid rgb(150, 255, 140);
+  border: 6px solid var(--pink);
   border-radius: 50%;
-  border-top: 6px solid var(--navbar-bg-color);
+  border-top: 6px solid var(--blue);
   width: 45px;
   height: 45px;
 	animation: spin 1.5s linear infinite;
@@ -228,6 +452,11 @@ tr:nth-child(odd){
 	margin-top: 20px;
 }
 
+.load-wrap-main {
+	width: 100%;
+	height: 100%;
+}
+
 .pinn-button, .add-hint, .hint-text {
   position: absolute;
   top: 0;
@@ -236,7 +465,7 @@ tr:nth-child(odd){
   background-color: var(--main-backgroung-color);
   font-size: 13px;
   padding: 4px 6px;
-  color: rgb(104, 156, 252);
+  color: var(--blue);
   cursor: pointer;
   outline: none;
 }
@@ -276,7 +505,7 @@ tr:nth-child(odd){
 .hint-form input {
   font-family: inherit;
   border: 0;
-  border-bottom: 2px solid var(--navbar-bg-color);
+  border-bottom: 2px solid var(--pink);
   outline: 0;
   font-size: 1rem;
   color: rgb(139, 139, 139);
@@ -288,7 +517,7 @@ tr:nth-child(odd){
 
 .hint-form button {
   color: rgb(255, 255, 255);
-  background-color: var(--navbar-bg-color);
+  background-color: var(--pink);
   outline: none;
   border: none;
   font-weight: normal;
@@ -298,12 +527,12 @@ tr:nth-child(odd){
 
 .hint-form button:hover {
   background-color: rgb(255, 255, 255);
-  color: var(--navbar-bg-color);
+  color: var(--pink);
   cursor: pointer;
 }
 
 .basic-button {
-  background-color: var(--main-button-background-color);
+  background-color: var(--green);
 	border-radius: var(--main-button-border-radius);
 	color: var(--main-button-text-color);
 	border: 3px solid var(--main-button-text-color);
@@ -317,9 +546,49 @@ tr:nth-child(odd){
 	margin: var(--margin-small);
 }
 
-.basic-button:hover {
+.basic-button:hover, .login-button:hover {
 	background-color: var(--main-button-text-color);
-	color: var(--main-button-background-color);
+	color: var(--green);
+}
+
+.login-button:hover {
+	border-color: var(--green);
+}
+
+.login-button, .vocab-delete-button {
+	background-color: var(--green);
+	border-radius: var(--main-button-border-radius);
+	color: var(--main-button-text-color);
+	border: 3px solid var(--main-button-text-color);
+  text-align: center;
+	text-decoration: none;
+	font-size: 15px;
+	padding: 6px 12px;
+	cursor: pointer;
+}
+
+
+.login-button:disabled {
+	border: none;
+	background-color: rgb(77, 77, 77);
+	color: white;
+}
+
+.vocab-delete-button {
+	background-color: red;
+	margin: 20px;
+}
+
+.vocab-delete-button:hover {
+	background-color: white;
+	color: red;
+	border: 3px solid red;
+}
+
+.disabled-info {
+	font-size: 12px;
+	color: var(--pink);
+	margin-bottom: 20px;
 }
 
 .pinn-mode-button {
@@ -370,11 +639,12 @@ tr:nth-child(odd){
 /* nav bar */
 
 .nav {
+	position: relative;
 	overflow: hidden;
 	flex-wrap: wrap;
 	flex-direction: row;
 	text-align: center;
-	background-color:	var(--navbar-bg-color);
+	background-color:	var(--pink);
 	height: 40px;
 	position: var(--nav-position);
 	padding: 0;
@@ -384,7 +654,7 @@ tr:nth-child(odd){
 	z-index: 1;
 }
 
-.nav button {
+.nav button, #login, #signup, #logout {
   border: none;
   color: var(--navbar-color);
   text-align: center;
@@ -394,18 +664,81 @@ tr:nth-child(odd){
 	line-height: 40px;
 	cursor: pointer;
   height: 40px;
-  background-color: var(--navbar-bg-color);
+  background-color: var(--pink);
   outline: none;
 }
 
 .nav button:hover {
   background-color: var(--navbar-color);
-  color: var(--navbar-bg-color);
+  color: var(--pink);
+}
+
+#login {
+	background-color: var(--blue);
+	position: absolute;
+	right: 90px;
+	width: 90px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#signup {
+	background-color: var(--green);
+	position: absolute;
+	right: 0px;
+	width: 90px;
+	padding-left: 2px;
+	padding-right: 2px;
 }
 
 
-.gradient-wrapper {
-	background: var(--main-gradient);
+#logout {
+	background-color: var(--blue);
+	position: absolute;
+	right: 0px;
+	width: 90px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+
+#loggedin {
+	position: absolute;
+	right: 90px;
+	padding-right: 10px;
+	font-weight: bolder;
+	color: var(--blue);
+}
+
+#notification {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 600px;
+	height: 250px;
+	top: 25%;
+	left: 50%;
+	margin-top: -125px;
+	margin-left: -300px;
+	z-index: 3;
+	background-color: white;
+	border-radius: 10px;
+	border: 4px solid var(--blue);
+	color: 	var(--blue);
+	font-size: 25px;
+	text-shadow: none;
+	padding: 3px;
+	box-sizing: border-box;
+}
+
+.instruction .input-container {
+	margin-bottom: 0;
+	width: 80%;
+
+}
+
+#filter {
 	width: 100%;
 }
 
@@ -413,6 +746,45 @@ tr:nth-child(odd){
 @keyframes card-flip {
   0% { transform: rotateY(-90deg); }
   100% { transform: rotateY(0deg); }
+}
+
+@media only screen and (max-width: 1100px) {
+	.mobile-nav-wrap {
+		display: flex;
+	}
+	.nav {
+		display: none;
+	}
+	#notification {
+		width: 80%;
+		margin-left: -40%;
+		font-size: 15px;
+		height: 150px;
+		margin-top: -75px;
+
+	}
+  .instruction-wrapper {
+    flex-direction: column;
+	}
+	.instruction {
+		width: 90vw;
+		max-width: 600px;
+	}
+	ul, table{
+		width: 80vw;
+		max-width: 500px;
+	}
+	.header {
+		font-size: 20px;
+	}
+
+	.card {
+		width: 90vw;
+		height: 70vw;
+		max-width: 400px;
+		max-height: 300px;
+	}
+
 }
 
 

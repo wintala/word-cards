@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useDispatch } from "react-redux"
-import { setHint } from "../reducer";
+import { setHint } from "../reducers/vocab-reducer";
 
 const HintForm = ({currentIndex}) => {
   const dispatch = useDispatch()

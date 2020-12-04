@@ -1,23 +1,27 @@
 import React, {useState} from 'react';
 import { useSelector, useDispatch } from "react-redux"
-import { pinWord } from "../reducer";
+import { pinWord } from "../reducers/vocab-reducer";
 import HintForm from "./hint-form"
 
 
 const CardDisplayer = () => {
   const dispatch = useDispatch()
-  const wordPairs = useSelector(state => state)
+  const vocabulary = useSelector(state => state.words)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [side, setSide] = useState(0)
   const [pinMode, setPinMode] = useState(false)
 
-  if (wordPairs.length === 0) {
-    return null
+  if (!vocabulary) {
+    return (
+      <div className="load-wrap-main">
+        <div className="spin-loading"></div>
+      </div>
+    )
   }
 
-  const pinnedIndecies = wordPairs.filter(x => x.pinned).map(x => wordPairs.indexOf(x))
+  const pinnedIndecies = vocabulary.pairs.filter(x => x.pinned).map(x => vocabulary.pairs.indexOf(x))
 
-  let wordPair = wordPairs[currentIndex]
+  let wordPair = vocabulary.pairs[currentIndex]
 
   const nextButton = () => {
     const handeNext = () => {
@@ -30,7 +34,7 @@ const CardDisplayer = () => {
     }
 
     return(
-      currentIndex === wordPairs.length - 1 || (pinMode && pinnedIndecies.indexOf(currentIndex) === pinnedIndecies.length - 1) ?
+      currentIndex === vocabulary.pairs.length - 1 || (pinMode && pinnedIndecies.indexOf(currentIndex) === pinnedIndecies.length - 1) ?
       null :
       <button className="basic-button" onClick={handeNext}>Next</button>
     )
@@ -62,7 +66,7 @@ const CardDisplayer = () => {
   
     return(
       !pinMode ? 
-      <button className="pinn-button" onClick={handlepinning}>{wordPairs[currentIndex].pinned ? "Unpinn" : "Pinn"}</button> :
+      <button className="pinn-button" onClick={handlepinning}>{vocabulary.pairs[currentIndex].pinned ? "Unpinn" : "Pinn"}</button> :
       null
     )
   }
@@ -74,7 +78,7 @@ const CardDisplayer = () => {
     }
 
     return(
-      !pinMode && currentIndex === wordPairs.length - 1 && pinnedIndecies.length !== 0 ?
+      !pinMode && currentIndex === vocabulary.pairs.length - 1 && pinnedIndecies.length !== 0 ?
       <button className="pinn-mode-button" onClick={handlePinMode}>View pinned cards</button> :
       null
     )
@@ -95,7 +99,7 @@ const CardDisplayer = () => {
   }
 
   return (
-    <div>
+    <div id="card-wrap">
       <div key={side} className="card">
         {pinnButton()}
         <HintForm currentIndex={currentIndex} />

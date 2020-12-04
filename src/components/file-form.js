@@ -1,13 +1,16 @@
 import React from 'react';
 import { readString } from 'react-papaparse'
-import { useDispatch } from "react-redux"
-import { setWords } from "../reducer";
+import { useDispatch, useSelector } from "react-redux"
+import { setWords } from "../reducers/vocab-reducer";
 import ServerFileGetter from "./server-vocbulary-search"
 import service from "../service"
+import {setLocation} from "../reducers/nav-reducer"
+import { setNotification } from "../reducers/notification-reducer";
 
 
-const FileForm = ({setNavLocation}) => {
+const FileForm = () => {
   const dispatch = useDispatch()
+  const user = useSelector(s => s.user)
 
   const handleFileUpload = (file) => {
     const reader = new FileReader()
@@ -15,15 +18,41 @@ const FileForm = ({setNavLocation}) => {
     reader.onload = async (fileData) => { 
       const text = fileData.target.result
       const arr = readString(text)
-      const words = arr.data.map(x => ({pair: x, pinned: false, hint: ""}))
-      dispatch(setWords(words))
       const fileName = file.name.substring(0, file.name.length - 4)
-      const postData = {name: fileName, wordpairs: arr.data.map(x => ({word: x[0], translation: x[1]}))}
+      const postData = {
+        name: fileName, 
+        wordpairs: arr.data.map(x => ({word: x[0], translation: x[1]})).filter(x => x.word && x.translation)
+      }
+      console.log(postData);
       if (postData.wordpairs.length !== 0) {
-        service.postVocab(postData).catch(err => window.alert("Your data could not be the saved to the server due to invalid content of your file"))
-        setNavLocation("cards")
-      } else {
-        window.alert("There appeard not to be any content in your file")}
+        if (user) {
+          service.postVocab(postData, user).then(r => {
+            dispatch(setWords(
+              {
+                pairs: r.wordpairs.map(x => ({pair: [x.word, x.translation], id: x.id, pinned: false, hint: ""})),
+                name: r.name,
+                owner: r.owner,
+                id: r.id
+              }
+            ))
+          })
+          .catch(err => {
+            dispatch(setNotification("Your data could not be the saved to the server due to invalid content of your file", 4))
+            const words = arr.data.map(x => ({pair: x, pinned: false, hint: ""}))
+            dispatch(setWords({name: fileName, pairs: words, owner: null, id: null, unsaveable: true}))
+          })
+        }
+        else {
+          dispatch(setNotification("Your data was not saved because your not logged in", 4))
+            const words = arr.data.map(x => ({pair: x, pinned: false, hint: ""}))
+            dispatch(setWords({name: fileName, pairs: words, owner: null, id: null}))
+        }
+        dispatch(setLocation("cards"))
+      } 
+      else {
+        console.log("jii");
+        dispatch(setNotification("There appeard not to be any content in your file", 3))
+      }
     }
 
     reader.readAsText(file)
@@ -31,9 +60,9 @@ const FileForm = ({setNavLocation}) => {
 
   return (
       <div>
-        <h1 className="header">
-          Welcome to Vocab Training
-        </h1>
+        <div className="header">
+          <h1>Welcome to Vocab Training</h1>
+        </div>
         <form>
           <input onChange={(e) => handleFileUpload(e.target.files[0])} type="file" id="file" name="uploadFile" accept=".txt, .csv"/>
           <label htmlFor="file">
@@ -78,7 +107,7 @@ const FileForm = ({setNavLocation}) => {
           </table>
           </div>
           <div className="or">OR</div>
-          <ServerFileGetter setNavLocation={setNavLocation}/>
+          <ServerFileGetter />
         </div>
       </div>
   )

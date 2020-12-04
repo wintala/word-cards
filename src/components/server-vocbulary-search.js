@@ -1,45 +1,51 @@
 import React, {useEffect, useState} from 'react';
 import service from "../service"
-import { useDispatch } from "react-redux"
-import { setWords } from "../reducer";
+import { useDispatch} from "react-redux"
+import { setWords } from "../reducers/vocab-reducer";
+import {setLocation} from "../reducers/nav-reducer"
 
 
-const ServerFileGetter = ({setNavLocation}) => {
+const ServerFileGetter = () => {
 	const dispatch = useDispatch()
 	const [vocabList, setVocablist] = useState(null)
+	const [filter, setFilter] = useState("")
 
 	useEffect(() => {
 			service.getVocabs().then(r => setVocablist(r))
-		},[])
+		}, [])
 
 	const handleVocabSelection = (id) => {
 		service.getOneVocab(id).then(r =>{
 			dispatch(setWords(
-				r.wordpairs.map(x => ({pair: [x.word, x.translation], pinned: false, hint: ""}))
+				{
+					pairs: r.wordpairs.map(x => ({pair: [x.word, x.translation], id: x.id, pinned: false, hint: ""})),
+					name: r.name,
+					owner: r.owner,
+					id: r.id
+				}
 			))
-			setNavLocation("cards")
 		}
 		)
-	}
-
-	const handleVocabDelete = (id) => {
-		if (window.confirm("If this isn't your own vocabulary you probably shouldn't do this (maintainer of this site is too lazy to add user athentication). Wish to continue?")) {
-			service.deleteVocab(id)
-			const vocabsAfterDeltetion = vocabList.filter(v => v.id !== id)
-			setVocablist(vocabsAfterDeltetion)
-		}
-
+		dispatch(setLocation("cards"))
 	}
 
 	return(
 		<div className="instruction">
-			<div>Chooce an existing vocabulary:</div>
+			<div className="input-container">
+				<input
+					id="filter"
+					type="text"
+					required
+					value={filter}
+					onChange={({ target }) => setFilter(target.value)}
+				/>
+				<label>Search vocabulary</label>
+			</div>
 			{vocabList ? 
 			<ul>
-				{vocabList.map(v => 
+				{vocabList.filter(v => v.name.includes(filter)).map(v => 
 				<li key={v.name}> 
 					<div onClick={() => handleVocabSelection(v.id)}>{v.name}</div>
-					<div className="delete-button" onClick={() => handleVocabDelete(v.id)}>X</div>
 				</li>)}
 			</ul> : 
 			<div className="load-wrap">
