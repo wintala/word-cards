@@ -4,7 +4,7 @@ const Info = () => {
 	return(
 		<>
 		<div id="main-info">
-			Upload csv file containing the vocabulary you want to study and the app creates two-sided cards for each word-translation pair.
+			Upload csv file containing the vocabulary you want to study or chooce an existing vocabulary and the app creates two-sided cards for each word-translation pair.
 		</div>
 		<table id="tips-table">
 			<tbody>

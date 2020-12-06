@@ -185,13 +185,17 @@ li {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	cursor: pointer;
+}
+
+li:hover {
+	color: white;
 }
 
 li div{
   padding: 5px;
 	text-align: center;
 	display: inline-block;
-	cursor: pointer;
 }
 
 li:nth-child(odd){
@@ -309,6 +313,8 @@ tr:nth-child(odd){
 
 #main-info {
 	font-size: 20px;
+	text-align: left;
+	max-width: 500px;
 }
 
 #note {
@@ -546,16 +552,16 @@ tr:nth-child(odd){
 	margin: var(--margin-small);
 }
 
-.basic-button:hover, .login-button:hover {
+.basic-button:hover, .login-button:hover, .save-button:hover {
 	background-color: var(--main-button-text-color);
 	color: var(--green);
 }
 
-.login-button:hover {
+.login-button:hover, .save-button:hover {
 	border-color: var(--green);
 }
 
-.login-button, .vocab-delete-button {
+.login-button, .vocab-delete-button, .save-button {
 	background-color: var(--green);
 	border-radius: var(--main-button-border-radius);
 	color: var(--main-button-text-color);

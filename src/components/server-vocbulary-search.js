@@ -43,9 +43,9 @@ const ServerFileGetter = () => {
 			</div>
 			{vocabList ? 
 			<ul>
-				{vocabList.filter(v => v.name.includes(filter)).map(v => 
-				<li key={v.name}> 
-					<div onClick={() => handleVocabSelection(v.id)}>{v.name}</div>
+				{vocabList.filter(v => v.name.toLowerCase().includes(filter.toLowerCase())).map(v => 
+				<li onClick={() => handleVocabSelection(v.id)} key={v.name}> 
+					<div>{v.name}</div>
 				</li>)}
 			</ul> : 
 			<div className="load-wrap">
