@@ -34,6 +34,7 @@ const FileForm = () => {
                 id: r.id
               }
             ))
+            dispatch(setNotification("Vocabualry saved successfully", 3))
           })
           .catch(err => {
             dispatch(setNotification("Your data could not be the saved to the server due to invalid content of your file", 5))
@@ -49,7 +50,6 @@ const FileForm = () => {
         dispatch(setLocation("cards"))
       } 
       else {
-        console.log("jii");
         dispatch(setNotification("There appeard not to be any content in your file", 3))
       }
     }

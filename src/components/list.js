@@ -24,6 +24,7 @@ const List = () => {
 
   const handleVocabDelete = () => {
     if (window.confirm("Are you sure you want to delete this vocabulary permanently")) {
+      dispatch(setWords(null)) // triggeröidään latausanimaatio
       service.deleteVocab(vocabulary.id, user).then(r => {
         dispatch(deleteVocab())
         dispatch(setNotification("Delete successful", 2))
