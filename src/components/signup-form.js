@@ -19,9 +19,9 @@ const SignupForm = () => {
 				dispatch(setUser(user))
 				window.localStorage.setItem('loggedUser', JSON.stringify(user))
 				dispatch(setLocation("start"))
-				dispatch(setNotification("Sign up successful", 3))
-			}).catch(e => window.alert("Wrong username or password"))
-		}).catch(e => window.alert("User could not be created"))
+				dispatch(setNotification("Sign up successful", 2))
+			}).catch(e => dispatch(setNotification("User was created, but login failded for some reason", 3)))
+		}).catch(e => dispatch(setNotification("Failed to create user", 3)))
 	}
 
 

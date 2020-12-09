@@ -15,6 +15,8 @@ const ServerFileGetter = () => {
 		}, [])
 
 	const handleVocabSelection = (id) => {
+		// null triggeröi latausanimaation
+		dispatch(setWords(null))
 		service.getOneVocab(id).then(r =>{
 			dispatch(setWords(
 				{

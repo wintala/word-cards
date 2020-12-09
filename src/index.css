@@ -349,6 +349,8 @@ tr:nth-child(odd){
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	outline: none;
+	position: relative;
 }
 
 .card{
@@ -371,6 +373,13 @@ tr:nth-child(odd){
   height: 100%;
 	margin-top: bottom;
 	text-align: center;
+}
+
+#card-tip {
+	font-size: 12px;
+	position: absolute;
+	bottom: 20px;
+	color: rgba(0, 0, 0, 0.6);
 }
 
 .next-prev-wrap {
@@ -721,18 +730,17 @@ tr:nth-child(odd){
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 600px;
-	height: 250px;
-	top: 25%;
+	width: 400px;
+	height: 60px;
+	top: 10%;
 	left: 50%;
-	margin-top: -125px;
-	margin-left: -300px;
+	margin-top: -30px;
+	margin-left: -200px;
 	z-index: 3;
 	background-color: white;
-	border-radius: 10px;
-	border: 4px solid var(--blue);
+	border: 3px solid var(--blue);
 	color: 	var(--blue);
-	font-size: 25px;
+	font-size: 14px;
 	text-shadow: none;
 	padding: 3px;
 	box-sizing: border-box;
@@ -755,6 +763,13 @@ tr:nth-child(odd){
 }
 
 @media only screen and (max-width: 1100px) {
+	.instruction-wrapper {
+    flex-direction: column;
+	}
+}
+
+
+@media only screen and (max-width: 800px) {
 	.mobile-nav-wrap {
 		display: flex;
 	}
@@ -762,16 +777,11 @@ tr:nth-child(odd){
 		display: none;
 	}
 	#notification {
-		width: 80%;
-		margin-left: -40%;
-		font-size: 15px;
-		height: 150px;
-		margin-top: -75px;
+		width: 90%;
+		margin-left: -45%;
+		top: 12%;
+	}
 
-	}
-  .instruction-wrapper {
-    flex-direction: column;
-	}
 	.instruction {
 		width: 90vw;
 		max-width: 600px;
@@ -789,6 +799,10 @@ tr:nth-child(odd){
 		height: 70vw;
 		max-width: 400px;
 		max-height: 300px;
+	}
+
+	#card-tip {
+		display: none;
 	}
 
 }

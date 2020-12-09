@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import { pinWord } from "../reducers/vocab-reducer";
 import HintForm from "./hint-form"
@@ -10,6 +10,14 @@ const CardDisplayer = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [side, setSide] = useState(0)
   const [pinMode, setPinMode] = useState(false)
+  const wrap = useRef()
+
+  // näppäinten kuuntelua varten
+  useEffect(() => {
+    if (wrap.current) {
+      wrap.current.focus()
+    }
+  })
 
   if (!vocabulary) {
     return (
@@ -21,55 +29,41 @@ const CardDisplayer = () => {
 
   const pinnedIndecies = vocabulary.pairs.filter(x => x.pinned).map(x => vocabulary.pairs.indexOf(x))
 
-  let wordPair = vocabulary.pairs[currentIndex]
+  const wordPair = vocabulary.pairs[currentIndex]
 
-  const nextButton = () => {
-    const handeNext = () => {
-      if (!pinMode) {
-        setCurrentIndex(currentIndex + 1)
-      }
-      else {
-        setCurrentIndex(pinnedIndecies[pinnedIndecies.indexOf(currentIndex) + 1])
-      }
+  const isFirstPair = currentIndex === 0 || (pinMode && pinnedIndecies.indexOf(currentIndex) === 0)
+  const isLastPair = currentIndex === vocabulary.pairs.length - 1 || (pinMode && pinnedIndecies.indexOf(currentIndex) === pinnedIndecies.length - 1)
+
+
+  const handeNext = () => {
+    if (!pinMode) {
+      setCurrentIndex(currentIndex + 1)
     }
-
-    return(
-      currentIndex === vocabulary.pairs.length - 1 || (pinMode && pinnedIndecies.indexOf(currentIndex) === pinnedIndecies.length - 1) ?
-      null :
-      <button className="basic-button" onClick={handeNext}>Next</button>
-    )
+    else {
+      setCurrentIndex(pinnedIndecies[pinnedIndecies.indexOf(currentIndex) + 1])
+    }
   }
 
-  const previousButton = () => {
-    const handlePrevious = () => {
-      if (!pinMode) {
-        setCurrentIndex(currentIndex - 1)
-      }
-      else {
-        setCurrentIndex(pinnedIndecies[pinnedIndecies.indexOf(currentIndex) - 1])
-      }
+  const handlePrevious = () => {
+    if (!pinMode) {
+      setCurrentIndex(currentIndex - 1)
     }
-
-    return(
-      currentIndex === 0 || (pinMode && pinnedIndecies.indexOf(currentIndex) === 0) ?
-      null :
-      <button className="basic-button" onClick={handlePrevious}>Previous</button>
-    )
+    else {
+      setCurrentIndex(pinnedIndecies[pinnedIndecies.indexOf(currentIndex) - 1])
+    }
   }
 
+  const nextButton = () => (
+    isLastPair ? null : <button className="basic-button" onClick={handeNext}>Next</button>
+  )
 
+  const previousButton = () => (
+    isFirstPair ? null :<button className="basic-button" onClick={handlePrevious}>Previous</button>
+  )
 
-  const pinnButton = () => {
-    const handlepinning = () => {
-      dispatch(pinWord(currentIndex))
-    }
-  
-    return(
-      !pinMode ? 
-      <button className="pinn-button" onClick={handlepinning}>{vocabulary.pairs[currentIndex].pinned ? "Unpinn" : "Pinn"}</button> :
-      null
-    )
-  }
+  const pinnButton = () => (
+    !pinMode ? <button className="pinn-button" onClick={() => dispatch(pinWord(currentIndex))}>{wordPair.pinned ? "Unpinn" : "Pinn"}</button> : null
+  )
 
   const pinnModeButton = () => {
     const handlePinMode = () => {
@@ -95,11 +89,35 @@ const CardDisplayer = () => {
       <button className="pinn-mode-button" onClick={handleExitPinMode}>View all cards</button> :
       null
     )
+  }
 
+  const counter = () => {
+    const current = pinMode ? pinnedIndecies.indexOf(currentIndex) + 1 : currentIndex + 1
+    const total = pinMode ? pinnedIndecies.length : vocabulary.pairs.length
+    return (
+      <div>{`${current}/${total}`}</div>
+    )
+  }
+
+  const handeKeyPress = (e) => {
+    const code = e.keyCode
+    if (code === 39 && !isLastPair) {
+      handeNext()
+    } 
+    else if (code === 37 && !isFirstPair) {
+      handlePrevious()
+    }
+    else if (code === 32) {
+      setSide(Math.abs(side - 1))
+    }
+    else if (code === 80 && !pinMode) {
+      dispatch(pinWord(currentIndex))
+    }
   }
 
   return (
-    <div id="card-wrap">
+    <div id="card-wrap" ref={wrap} onKeyDown={handeKeyPress} tabIndex="0">
+      {counter()}
       <div key={side} className="card">
         {pinnButton()}
         <HintForm currentIndex={currentIndex} />
@@ -114,6 +132,7 @@ const CardDisplayer = () => {
       </div>
       {pinnModeButton()}
       {exitPinnModeButton()}
+      <div id="card-tip">Keyboard controls: Press space to flip the card, arrow keys to move between card and P to pinn the card</div>
     </div>
   )
 }

@@ -23,7 +23,6 @@ const FileForm = () => {
         name: fileName, 
         wordpairs: arr.data.map(x => ({word: x[0], translation: x[1]})).filter(x => x.word && x.translation)
       }
-      console.log(postData);
       if (postData.wordpairs.length !== 0) {
         if (user) {
           service.postVocab(postData, user).then(r => {
@@ -37,13 +36,13 @@ const FileForm = () => {
             ))
           })
           .catch(err => {
-            dispatch(setNotification("Your data could not be the saved to the server due to invalid content of your file", 4))
+            dispatch(setNotification("Your data could not be the saved to the server due to invalid content of your file", 5))
             const words = arr.data.map(x => ({pair: x, pinned: false, hint: ""}))
             dispatch(setWords({name: fileName, pairs: words, owner: null, id: null, unsaveable: true}))
           })
         }
         else {
-          dispatch(setNotification("Your data was not saved because your not logged in", 4))
+          dispatch(setNotification("Your data was not saved because your not logged in", 5))
             const words = arr.data.map(x => ({pair: x, pinned: false, hint: ""}))
             dispatch(setWords({name: fileName, pairs: words, owner: null, id: null}))
         }

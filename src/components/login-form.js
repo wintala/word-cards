@@ -17,9 +17,9 @@ const LoginForm = () => {
 			dispatch(setUser(user))
 			window.localStorage.setItem('loggedUser', JSON.stringify(user))
 			dispatch(setLocation("start"))
-			dispatch(setNotification("Login successful", 3))
+			dispatch(setNotification("Login successful", 2))
 		})
-		.catch(e => window.alert("Wrong username or password"))
+		.catch(e => dispatch(setNotification("Wrong username or password", 3)))
 	}
 
 
